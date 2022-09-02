@@ -1,6 +1,6 @@
 @media (min-width: 1440px) {
   .header {
-    background: url("/images/bg-header-desktop.svg");
+    background: url("https://monaelshikh.github.io/static-job-listings/images/bg-header-desktop.svg");
     background-color: var(--desaturated-dark-cyan);
   }
   .job {

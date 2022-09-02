@@ -34,7 +34,7 @@ span {
 /*********************** Start header **********************/
 .header {
   position: relative;
-  background: url("/images/bg-header-mobile.svg");
+  background: url("https://monaelshikh.github.io/static-job-listings/images/bg-header-mobile.svg");
   background-color: var(--desaturated-dark-cyan);
   height: 150px;
 }

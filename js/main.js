@@ -7,7 +7,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-const url = "/data/data.json";
+const url = "https://monaelshikh.github.io/static-job-listings/data/data.json";
 let jobs;
 let filteredJobs;
 let jobsListDiv = document.querySelector(".jobs-list");

@@ -42,7 +42,7 @@ The designs were created to the following widths:
 ### Links
 
 - Solution URL: [https://github.com/MonaElshikh/static-job-listings]
-- Live Site URL: [Add live site URL here]
+- Live Site URL: [https://monaelshikh.github.io/static-job-listings/]
 
 ## My process
 

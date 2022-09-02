@@ -1,6 +1,7 @@
 //#region Declaration
 import { Job } from "./job";
-const url = "/data/data.json";
+// const url = "/data/data.json";
+const url = "https://monaelshikh.github.io/static-job-listings/data/data.json";
 let jobs: Job[];
 let filteredJobs: Job[];
 let jobsListDiv = document.querySelector(".jobs-list") as HTMLDivElement;
