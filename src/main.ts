@@ -182,7 +182,7 @@ function createFilterComponent(key: string, value: string) {
   filterNameSpan.innerHTML = value;
   let closeSpan = document.createElement("span");
   let closeImg = document.createElement("img");
-  closeImg.src = "/images/icon-remove.svg";
+  closeImg.src = "images/icon-remove.svg";
   closeImg.alt = "Close";
   closeSpan.addEventListener("click", removeFilter);
   closeSpan.appendChild(closeImg);
