@@ -1,0 +1,193 @@
+/*********************** Start Globals ***********************/
+* {
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+}
+:root {
+  --desaturated-dark-cyan: hsl(180, 29%, 50%);
+  --light-grayish-cyan: hsl(180, 52%, 96%); /*(Background)*/
+  --very-light-grayish-cyan: hsl(180, 31%, 95%); /*(Filter Tablets)*/
+  --dark-grayish-cyan: hsl(180, 8%, 52%);
+  --very-dark-grayish-cyan: hsl(180, 14%, 20%);
+  --white: hsl(100, 100%, 100%, 100%);
+  --radius: 5px;
+  --transition: 0.3s;
+}
+body {
+  font-family: "League Spartan", sans-serif;
+  font-size: 15px;
+}
+html {
+  scroll-behavior: smooth;
+}
+.container {
+  position: relative;
+  background-color: var(--light-grayish-cyan);
+  min-height: 100vh;
+  padding-bottom: 10px;
+}
+span {
+  display: inline-block;
+}
+/*********************** End Globals ***********************/
+/*********************** Start header **********************/
+.header {
+  position: relative;
+  background: url("/images/bg-header-mobile.svg");
+  background-color: var(--desaturated-dark-cyan);
+  height: 150px;
+}
+/*********************** End header ***********************/
+/*********************** Start filters ********************/
+.filters {
+  position: relative;
+  background-color: var(--white);
+  border-radius: var(--radius);
+  padding: 20px;
+  display: flex;
+  align-items: center;
+  width: 90vw;
+  margin-inline: auto;
+  margin-top: -45px;
+  box-shadow: 0 0 17px -7px var(--desaturated-dark-cyan);
+  display: none;
+}
+.filters .boxes {
+  display: flex;
+  flex-wrap: wrap;
+  flex: 1;
+}
+.filter {
+  background-color: var(--very-light-grayish-cyan);
+  color: var(--desaturated-dark-cyan);
+  border-top-left-radius: var(--radius);
+  border-bottom-left-radius: var(--radius);
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  margin: 7px;
+  cursor: pointer;
+}
+.filter > span:nth-child(1) {
+  display: inline-block;
+  padding: 7px;
+  width: fit-content;
+}
+.filter > span:nth-child(2) {
+  background-color: var(--desaturated-dark-cyan);
+  padding: 7px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-top-right-radius: var(--radius);
+  border-bottom-right-radius: var(--radius);
+}
+.filter > span:nth-child(2):hover {
+  background-color: var(--very-dark-grayish-cyan);
+}
+.clear > span {
+  cursor: pointer;
+  color: var(--dark-grayish-cyan);
+  transition: var(--transition);
+  font-weight: 700;
+}
+.clear > span:hover {
+  color: var(--desaturated-dark-cyan);
+}
+/*********************** End filters *********************/
+/*********************** Start jobs list *****************/
+.jobs-list {
+  margin-top: 50px;
+}
+.job {
+  background-color: var(--white);
+  width: 90vw;
+  margin-inline: auto;
+  margin-bottom: 50px;
+  padding: 20px;
+  border-radius: var(--radius);
+  border-left: solid 5px transparent;
+  box-shadow: 0 0 17px -7px var(--desaturated-dark-cyan);
+  transition: var(--transition);
+}
+.job:hover {
+  cursor: pointer;
+  border-left: solid 5px var(--desaturated-dark-cyan);
+}
+.job-data {
+  position: relative;
+}
+.job-data > img {
+  position: absolute;
+  top: -20%;
+  transform: translateY(-50%);
+  width: 60px;
+}
+.company {
+  display: flex;
+  align-items: center;
+  padding-top: 10px;
+  height: 40px;
+}
+.company > span:nth-child(1) {
+  color: var(--desaturated-dark-cyan);
+  font-weight: 700;
+  padding-right: 10px;
+  font-size: 18px;
+  margin-right: 15px;
+}
+.company > span:nth-child(2) {
+  background-color: var(--desaturated-dark-cyan);
+}
+.company > span:nth-child(3) {
+  background-color: var(--very-dark-grayish-cyan);
+}
+.company > span:nth-child(2),
+.company > span:nth-child(3) {
+  color: var(--white);
+  padding-inline: 10px;
+  padding-top: 7px;
+  padding-bottom: 5px;
+  border-radius: 13px;
+  text-transform: uppercase;
+  font-weight: 700;
+  margin-right: 10px;
+}
+.position > span {
+  margin: 10px 0;
+  color: var(--very-dark-grayish-cyan);
+  font-size: 18px;
+  font-weight: bold;
+  transition: var(--transition);
+}
+.position > span:hover {
+  cursor: pointer;
+  color: var(--desaturated-dark-cyan);
+}
+.contract {
+  display: flex;
+  margin: 5px 0 20px;
+  border-bottom: 1.5px solid var(--dark-grayish-cyan);
+}
+.contract > span {
+  padding-bottom: 20px;
+  font-size: 18px;
+  color: var(--dark-grayish-cyan);
+  padding-right: 10px;
+}
+.job-filters {
+  display: flex;
+  flex-wrap: wrap;
+}
+.job-filters > span {
+  padding: 9px;
+  cursor: pointer;
+  border-radius: var(--radius);
+  transition: var(--transition);
+}
+.job-filters > span:hover {
+  background-color: var(--desaturated-dark-cyan);
+  color: var(--white);
+}
+/*********************** End jobs list ******************/

@@ -1,0 +1,29 @@
+@media (min-width: 1440px) {
+  .header {
+    background: url("/images/bg-header-desktop.svg");
+    background-color: var(--desaturated-dark-cyan);
+  }
+  .job {
+    display: flex;
+    align-items: center;
+    margin-bottom: 30px;
+  }
+  .job-data {
+    flex: 1;
+    display: flex;
+    align-items: center;
+  }
+  .job-data > img {
+    position: relative;
+    margin-right: 30px;
+    width: 90px;
+    top: 50px;
+  }
+  .job-data .info {
+    flex: 1;
+  }
+  .contract {
+    border: 0;
+    margin-bottom: 0;
+  }
+}
