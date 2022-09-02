@@ -301,17 +301,16 @@ function addFiltersToPage() {
   }
 }
 function filterJobs() {
-  let _filteredJobs: Job[] = [];
   console.log("current filters> ", Filters);
   console.log("filters length", checkFilter().FiltersLength);
-  _filteredJobs = jobs.filter(
+  filteredJobs = jobs.filter(
     (job) =>
       Filters["role"].includes(job.role) ||
       Filters["level"].includes(job.level) ||
       job.languages.some((lang) => Filters["languages"].includes(lang)) ||
       job.tools.some((tool) => Filters["tools"].includes(tool))
   );
-  addToLocalStorage("jobs-list", _filteredJobs);
+  addToLocalStorage("jobs-list", filteredJobs);
   addJobsToPage();
 }
 //#endregion
