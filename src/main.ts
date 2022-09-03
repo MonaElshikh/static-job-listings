@@ -16,16 +16,16 @@ let Filters = {
 };
 //#endregion
 //#region Functions
-function addToLocalStorage(key: string, value: any) {
+function addToLocalStorage(key: string, value: any): void {
   localStorage.setItem(key, JSON.stringify(value));
 }
-function getFromLocalStorage(key: string) {
+function getFromLocalStorage(key: string): any {
   if (localStorage.getItem(key)) {
     return JSON.parse(localStorage.getItem(key) || "");
   }
   return "";
 }
-async function getJobs() {
+async function getJobs(): Promise<void> {
   // get data from api
   let data = (await fetch(url)).json();
   jobs = await data;
@@ -38,7 +38,7 @@ async function getJobs() {
   addJobsToPage();
 }
 // function to add jobs to DOM dynamiclly
-function addJobsToPage() {
+function addJobsToPage(): void {
   let jobsList: Job[] = getFromLocalStorage("jobs-list");
   jobsListDiv.innerHTML = ""; //reset jobs list
   console.log("jobs from add to page fun>", jobsList);
@@ -164,7 +164,7 @@ function addJobsToPage() {
 }
 //#region Filter Functions
 // function to load filters from storage if exsists
-function loadFilters() {
+function loadFilters(): void {
   let preferdFilters = getFromLocalStorage("filters");
   if (preferdFilters) {
     //if there r stored filters get them and add the filtered jobs to the page
@@ -172,39 +172,24 @@ function loadFilters() {
   }
   addFiltersToPage();
 }
-// function to create filter component
-//and add it on page load or when click on any filter
-function createFilterComponent(key: string, value: string) {
-  let filterDiv = document.createElement("div") as HTMLDivElement;
-  filterDiv.className = "filter";
-  filterDiv.setAttribute("data-filter", key);
-  let filterNameSpan = document.createElement("span");
-  filterNameSpan.innerHTML = value;
-  let closeSpan = document.createElement("span");
-  let closeImg = document.createElement("img");
-  closeImg.src = "images/icon-remove.svg";
-  closeImg.alt = "Close";
-  closeSpan.addEventListener("click", removeFilter);
-  closeSpan.appendChild(closeImg);
-  filterDiv.appendChild(filterNameSpan);
-  filterDiv.appendChild(closeSpan);
-  return filterDiv;
-}
-// function to check if filter exsists
-function checkFilter(source: string[] = [], match = "") {
-  return {
-    filterExsists: source.includes(match),
-    FiltersLength:
-      Filters["role"].length == 0 &&
-      Filters["level"].length == 0 &&
-      Filters["languages"].length == 0 &&
-      Filters["tools"].length == 0
-        ? 0
-        : 1,
-  };
+// function to add choosen filters to the top of the page.
+function addFiltersToPage(): void {
+  if (checkFilter().FiltersLength == 0) {
+    filtersDiv.style.display = "none";
+  } else {
+    filtersDiv.style.display = "flex";
+    boxesDiv.innerHTML = "";
+    for (let filter in Filters) {
+      if (Filters[filter].length > 0) {
+        Filters[filter].forEach((item: string) => {
+          boxesDiv?.appendChild(createFilterComponent(filter, item));
+        });
+      }
+    }
+  }
 }
 // function to store choosen filetrs in Filters Object
-function addFiletrCriteria(event: any) {
+function addFiletrCriteria(event: any): false | undefined {
   // add each filter with its type to use it in filter operation.
   switch (event.target.dataset.filter) {
     case "role":
@@ -245,8 +230,55 @@ function addFiletrCriteria(event: any) {
   addToLocalStorage("filters", Filters);
   addFiltersToPage();
 }
+// function to create filter component
+//and add it on page load or when click on any filter
+function createFilterComponent(key: string, value: string): HTMLDivElement {
+  let filterDiv = document.createElement("div") as HTMLDivElement;
+  filterDiv.className = "filter";
+  filterDiv.setAttribute("data-filter", key);
+  let filterNameSpan = document.createElement("span");
+  filterNameSpan.innerHTML = value;
+  let closeSpan = document.createElement("span");
+  let closeImg = document.createElement("img");
+  closeImg.src = "images/icon-remove.svg";
+  closeImg.alt = "Close";
+  closeSpan.addEventListener("click", removeFilter);
+  closeSpan.appendChild(closeImg);
+  filterDiv.appendChild(filterNameSpan);
+  filterDiv.appendChild(closeSpan);
+  return filterDiv;
+}
+function filterJobs(): void {
+  console.log("current filters> ", Filters);
+  console.log("filters length", checkFilter().FiltersLength);
+  filteredJobs = jobs.filter(
+    (job) =>
+      Filters["role"].includes(job.role) ||
+      Filters["level"].includes(job.level) ||
+      job.languages.some((lang) => Filters["languages"].includes(lang)) ||
+      job.tools.some((tool) => Filters["tools"].includes(tool))
+  );
+  addToLocalStorage("jobs-list", filteredJobs);
+  addJobsToPage();
+}
+// function to check if filter exsists
+function checkFilter(
+  source: string[] = [],
+  match = ""
+): { filterExsists: boolean; FiltersLength: number } {
+  return {
+    filterExsists: source.includes(match),
+    FiltersLength:
+      Filters["role"].length == 0 &&
+      Filters["level"].length == 0 &&
+      Filters["languages"].length == 0 &&
+      Filters["tools"].length == 0
+        ? 0
+        : 1,
+  };
+}
 // function to remove filters
-function removeFilter(event: any) {
+function removeFilter(event: any): void {
   let filterKey = event.target.parentNode.parentNode.dataset.filter;
   let filterValue =
     event.target.parentNode.parentNode.querySelector("span").innerHTML;
@@ -271,7 +303,7 @@ function removeFilter(event: any) {
   }
 }
 // function to clear all filters
-function clearFilters() {
+function clearFilters(): void {
   clearfilters?.addEventListener("click", () => {
     addToLocalStorage("filters", {
       role: [],
@@ -284,35 +316,7 @@ function clearFilters() {
     addJobsToPage();
   });
 }
-// function to add choosen filters to the top of the page.
-function addFiltersToPage() {
-  if (checkFilter().FiltersLength == 0) {
-    filtersDiv.style.display = "none";
-  } else {
-    filtersDiv.style.display = "flex";
-    boxesDiv.innerHTML = "";
-    for (let filter in Filters) {
-      if (Filters[filter].length > 0) {
-        Filters[filter].forEach((item: string) => {
-          boxesDiv?.appendChild(createFilterComponent(filter, item));
-        });
-      }
-    }
-  }
-}
-function filterJobs() {
-  console.log("current filters> ", Filters);
-  console.log("filters length", checkFilter().FiltersLength);
-  filteredJobs = jobs.filter(
-    (job) =>
-      Filters["role"].includes(job.role) ||
-      Filters["level"].includes(job.level) ||
-      job.languages.some((lang) => Filters["languages"].includes(lang)) ||
-      job.tools.some((tool) => Filters["tools"].includes(tool))
-  );
-  addToLocalStorage("jobs-list", filteredJobs);
-  addJobsToPage();
-}
+
 //#endregion
 //#endregion
 //#region Calls
