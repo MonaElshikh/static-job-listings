@@ -249,15 +249,8 @@ function createFilterComponent(key: string, value: string): HTMLDivElement {
   return filterDiv;
 }
 function filterJobs(): void {
-  console.log("current filters> ", Filters);
-  console.log("filters length", checkFilter().FiltersLength);
-  filteredJobs = jobs.filter(
-    (job) =>
-      Filters["role"].includes(job.role) ||
-      Filters["level"].includes(job.level) ||
-      job.languages.some((lang) => Filters["languages"].includes(lang)) ||
-      job.tools.some((tool) => Filters["tools"].includes(tool))
-  );
+  filteredJobs = jobs.filter((job) => isValidFilter(job));
+  console.log("Filtered jobs are > ", filteredJobs);
   addToLocalStorage("jobs-list", filteredJobs);
   addJobsToPage();
 }
@@ -315,6 +308,29 @@ function clearFilters(): void {
     addToLocalStorage("jobs-list", jobs);
     addJobsToPage();
   });
+}
+// function to check if filter is in job
+function isValidFilter(item: {
+  role: string;
+  level: string;
+  languages: string[];
+  tools: string[];
+}) {
+  let { role, level, languages, tools } = Filters;
+  let tags = [...role, ...level, ...languages, ...tools];
+  console.log("tags are > ", tags);
+  let valid = true;
+  tags.forEach((tag) => {
+    if (
+      item.role !== tag &&
+      item.level !== tag &&
+      !item.languages.includes(tag) &&
+      !item.tools.includes(tag)
+    ) {
+      valid = false;
+    }
+  });
+  return valid;
 }
 
 //#endregion

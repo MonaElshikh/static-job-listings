@@ -155,32 +155,21 @@ function loadFilters() {
     }
     addFiltersToPage();
 }
-function createFilterComponent(key, value) {
-    let filterDiv = document.createElement("div");
-    filterDiv.className = "filter";
-    filterDiv.setAttribute("data-filter", key);
-    let filterNameSpan = document.createElement("span");
-    filterNameSpan.innerHTML = value;
-    let closeSpan = document.createElement("span");
-    let closeImg = document.createElement("img");
-    closeImg.src = "images/icon-remove.svg";
-    closeImg.alt = "Close";
-    closeSpan.addEventListener("click", removeFilter);
-    closeSpan.appendChild(closeImg);
-    filterDiv.appendChild(filterNameSpan);
-    filterDiv.appendChild(closeSpan);
-    return filterDiv;
-}
-function checkFilter(source = [], match = "") {
-    return {
-        filterExsists: source.includes(match),
-        FiltersLength: Filters["role"].length == 0 &&
-            Filters["level"].length == 0 &&
-            Filters["languages"].length == 0 &&
-            Filters["tools"].length == 0
-            ? 0
-            : 1,
-    };
+function addFiltersToPage() {
+    if (checkFilter().FiltersLength == 0) {
+        filtersDiv.style.display = "none";
+    }
+    else {
+        filtersDiv.style.display = "flex";
+        boxesDiv.innerHTML = "";
+        for (let filter in Filters) {
+            if (Filters[filter].length > 0) {
+                Filters[filter].forEach((item) => {
+                    boxesDiv === null || boxesDiv === void 0 ? void 0 : boxesDiv.appendChild(createFilterComponent(filter, item));
+                });
+            }
+        }
+    }
 }
 function addFiletrCriteria(event) {
     switch (event.target.dataset.filter) {
@@ -221,6 +210,39 @@ function addFiletrCriteria(event) {
     addToLocalStorage("filters", Filters);
     addFiltersToPage();
 }
+function createFilterComponent(key, value) {
+    let filterDiv = document.createElement("div");
+    filterDiv.className = "filter";
+    filterDiv.setAttribute("data-filter", key);
+    let filterNameSpan = document.createElement("span");
+    filterNameSpan.innerHTML = value;
+    let closeSpan = document.createElement("span");
+    let closeImg = document.createElement("img");
+    closeImg.src = "images/icon-remove.svg";
+    closeImg.alt = "Close";
+    closeSpan.addEventListener("click", removeFilter);
+    closeSpan.appendChild(closeImg);
+    filterDiv.appendChild(filterNameSpan);
+    filterDiv.appendChild(closeSpan);
+    return filterDiv;
+}
+function filterJobs() {
+    filteredJobs = jobs.filter((job) => isValidFilter(job));
+    console.log("Filtered jobs are > ", filteredJobs);
+    addToLocalStorage("jobs-list", filteredJobs);
+    addJobsToPage();
+}
+function checkFilter(source = [], match = "") {
+    return {
+        filterExsists: source.includes(match),
+        FiltersLength: Filters["role"].length == 0 &&
+            Filters["level"].length == 0 &&
+            Filters["languages"].length == 0 &&
+            Filters["tools"].length == 0
+            ? 0
+            : 1,
+    };
+}
 function removeFilter(event) {
     let filterKey = event.target.parentNode.parentNode.dataset.filter;
     let filterValue = event.target.parentNode.parentNode.querySelector("span").innerHTML;
@@ -254,32 +276,20 @@ function clearFilters() {
         addJobsToPage();
     });
 }
-function addFiltersToPage() {
-    if (checkFilter().FiltersLength == 0) {
-        filtersDiv.style.display = "none";
-    }
-    else {
-        filtersDiv.style.display = "flex";
-        boxesDiv.innerHTML = "";
-        for (let filter in Filters) {
-            if (Filters[filter].length > 0) {
-                Filters[filter].forEach((item) => {
-                    boxesDiv === null || boxesDiv === void 0 ? void 0 : boxesDiv.appendChild(createFilterComponent(filter, item));
-                });
-            }
+function isValidFilter(item) {
+    let { role, level, languages, tools } = Filters;
+    let tags = [...role, ...level, ...languages, ...tools];
+    console.log("tags are > ", tags);
+    let valid = true;
+    tags.forEach((tag) => {
+        if (item.role !== tag &&
+            item.level !== tag &&
+            !item.languages.includes(tag) &&
+            !item.tools.includes(tag)) {
+            valid = false;
         }
-    }
-}
-function filterJobs() {
-    let _filteredJobs = [];
-    console.log("current filters> ", Filters);
-    console.log("filters length", checkFilter().FiltersLength);
-    _filteredJobs = jobs.filter((job) => Filters["role"].includes(job.role) ||
-        Filters["level"].includes(job.level) ||
-        job.languages.some((lang) => Filters["languages"].includes(lang)) ||
-        job.tools.some((tool) => Filters["tools"].includes(tool)));
-    addToLocalStorage("jobs-list", _filteredJobs);
-    addJobsToPage();
+    });
+    return valid;
 }
 getJobs();
 loadFilters();
