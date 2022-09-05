@@ -174,7 +174,7 @@ function loadFilters(): void {
 }
 // function to add choosen filters to the top of the page.
 function addFiltersToPage(): void {
-  if (checkFilter().FiltersLength == 0) {
+  if (dStructureFilters().length == 0) {
     filtersDiv.style.display = "none";
   } else {
     filtersDiv.style.display = "flex";
@@ -191,42 +191,26 @@ function addFiltersToPage(): void {
 // function to store choosen filetrs in Filters Object
 function addFiletrCriteria(event: any): false | undefined {
   // add each filter with its type to use it in filter operation.
-  switch (event.target.dataset.filter) {
-    case "role":
-      console.log(
-        "role is exsists",
-        checkFilter(Filters.role, event.target.innerHTML).filterExsists
-      );
-      if (checkFilter(Filters.role, event.target.innerHTML).filterExsists) {
-        return false;
-      } else {
+  let _filters = dStructureFilters();
+  if (_filters.includes(event.target.innerHTML)) {
+    return false;
+  } else {
+    switch (event.target.dataset.filter) {
+      case "role":
         Filters.role.push(event.target.innerHTML);
-      }
-      break;
-    case "level":
-      if (checkFilter(Filters.level, event.target.innerHTML).filterExsists) {
-        return false;
-      } else {
+        break;
+      case "level":
         Filters.level.push(event.target.innerHTML);
-      }
-      break;
-    case "languages":
-      if (
-        checkFilter(Filters.languages, event.target.innerHTML).filterExsists
-      ) {
-        return false;
-      } else {
+        break;
+      case "languages":
         Filters.languages.push(event.target.innerHTML);
-      }
-      break;
-    case "tools":
-      if (checkFilter(Filters.tools, event.target.innerHTML).filterExsists) {
-        return false;
-      } else {
+        break;
+      case "tools":
         Filters.tools.push(event.target.innerHTML);
-      }
-      break;
+        break;
+    }
   }
+
   addToLocalStorage("filters", Filters);
   addFiltersToPage();
 }
@@ -254,21 +238,33 @@ function filterJobs(): void {
   addToLocalStorage("jobs-list", filteredJobs);
   addJobsToPage();
 }
-// function to check if filter exsists
-function checkFilter(
-  source: string[] = [],
-  match = ""
-): { filterExsists: boolean; FiltersLength: number } {
-  return {
-    filterExsists: source.includes(match),
-    FiltersLength:
-      Filters["role"].length == 0 &&
-      Filters["level"].length == 0 &&
-      Filters["languages"].length == 0 &&
-      Filters["tools"].length == 0
-        ? 0
-        : 1,
-  };
+// function to check if filter is in job
+function isValidFilter(item: {
+  role: string;
+  level: string;
+  languages: string[];
+  tools: string[];
+}) {
+  let tags = dStructureFilters();
+  console.log("tags are > ", tags);
+  let valid = true;
+  tags.forEach((tag) => {
+    if (
+      item.role !== tag &&
+      item.level !== tag &&
+      !item.languages.includes(tag) &&
+      !item.tools.includes(tag)
+    ) {
+      valid = false;
+    }
+  });
+  return valid;
+}
+// function to dsturcure filters object and return array of all filters
+function dStructureFilters() {
+  let { role, level, languages, tools } = Filters;
+  let tags = [...role, ...level, ...languages, ...tools];
+  return tags;
 }
 // function to remove filters
 function removeFilter(event: any): void {
@@ -287,7 +283,7 @@ function removeFilter(event: any): void {
   addToLocalStorage("filters", Filters);
   addFiltersToPage();
   // if all filters removed , fill the storage with the full jobs list and load the page
-  if (checkFilter().FiltersLength == 0) {
+  if (dStructureFilters().length == 0) {
     addToLocalStorage("jobs-list", jobs);
     addJobsToPage();
   } else {
@@ -308,29 +304,6 @@ function clearFilters(): void {
     addToLocalStorage("jobs-list", jobs);
     addJobsToPage();
   });
-}
-// function to check if filter is in job
-function isValidFilter(item: {
-  role: string;
-  level: string;
-  languages: string[];
-  tools: string[];
-}) {
-  let { role, level, languages, tools } = Filters;
-  let tags = [...role, ...level, ...languages, ...tools];
-  console.log("tags are > ", tags);
-  let valid = true;
-  tags.forEach((tag) => {
-    if (
-      item.role !== tag &&
-      item.level !== tag &&
-      !item.languages.includes(tag) &&
-      !item.tools.includes(tag)
-    ) {
-      valid = false;
-    }
-  });
-  return valid;
 }
 
 //#endregion

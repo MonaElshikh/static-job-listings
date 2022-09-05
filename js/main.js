@@ -156,7 +156,7 @@ function loadFilters() {
     addFiltersToPage();
 }
 function addFiltersToPage() {
-    if (checkFilter().FiltersLength == 0) {
+    if (dStructureFilters().length == 0) {
         filtersDiv.style.display = "none";
     }
     else {
@@ -172,40 +172,25 @@ function addFiltersToPage() {
     }
 }
 function addFiletrCriteria(event) {
-    switch (event.target.dataset.filter) {
-        case "role":
-            console.log("role is exsists", checkFilter(Filters.role, event.target.innerHTML).filterExsists);
-            if (checkFilter(Filters.role, event.target.innerHTML).filterExsists) {
-                return false;
-            }
-            else {
+    let _filters = dStructureFilters();
+    if (_filters.includes(event.target.innerHTML)) {
+        return false;
+    }
+    else {
+        switch (event.target.dataset.filter) {
+            case "role":
                 Filters.role.push(event.target.innerHTML);
-            }
-            break;
-        case "level":
-            if (checkFilter(Filters.level, event.target.innerHTML).filterExsists) {
-                return false;
-            }
-            else {
+                break;
+            case "level":
                 Filters.level.push(event.target.innerHTML);
-            }
-            break;
-        case "languages":
-            if (checkFilter(Filters.languages, event.target.innerHTML).filterExsists) {
-                return false;
-            }
-            else {
+                break;
+            case "languages":
                 Filters.languages.push(event.target.innerHTML);
-            }
-            break;
-        case "tools":
-            if (checkFilter(Filters.tools, event.target.innerHTML).filterExsists) {
-                return false;
-            }
-            else {
+                break;
+            case "tools":
                 Filters.tools.push(event.target.innerHTML);
-            }
-            break;
+                break;
+        }
     }
     addToLocalStorage("filters", Filters);
     addFiltersToPage();
@@ -232,16 +217,24 @@ function filterJobs() {
     addToLocalStorage("jobs-list", filteredJobs);
     addJobsToPage();
 }
-function checkFilter(source = [], match = "") {
-    return {
-        filterExsists: source.includes(match),
-        FiltersLength: Filters["role"].length == 0 &&
-            Filters["level"].length == 0 &&
-            Filters["languages"].length == 0 &&
-            Filters["tools"].length == 0
-            ? 0
-            : 1,
-    };
+function isValidFilter(item) {
+    let tags = dStructureFilters();
+    console.log("tags are > ", tags);
+    let valid = true;
+    tags.forEach((tag) => {
+        if (item.role !== tag &&
+            item.level !== tag &&
+            !item.languages.includes(tag) &&
+            !item.tools.includes(tag)) {
+            valid = false;
+        }
+    });
+    return valid;
+}
+function dStructureFilters() {
+    let { role, level, languages, tools } = Filters;
+    let tags = [...role, ...level, ...languages, ...tools];
+    return tags;
 }
 function removeFilter(event) {
     let filterKey = event.target.parentNode.parentNode.dataset.filter;
@@ -255,7 +248,7 @@ function removeFilter(event) {
     }
     addToLocalStorage("filters", Filters);
     addFiltersToPage();
-    if (checkFilter().FiltersLength == 0) {
+    if (dStructureFilters().length == 0) {
         addToLocalStorage("jobs-list", jobs);
         addJobsToPage();
     }
@@ -275,21 +268,6 @@ function clearFilters() {
         addToLocalStorage("jobs-list", jobs);
         addJobsToPage();
     });
-}
-function isValidFilter(item) {
-    let { role, level, languages, tools } = Filters;
-    let tags = [...role, ...level, ...languages, ...tools];
-    console.log("tags are > ", tags);
-    let valid = true;
-    tags.forEach((tag) => {
-        if (item.role !== tag &&
-            item.level !== tag &&
-            !item.languages.includes(tag) &&
-            !item.tools.includes(tag)) {
-            valid = false;
-        }
-    });
-    return valid;
 }
 getJobs();
 loadFilters();
